@@ -10,6 +10,11 @@
       "StackName": "amplify-emer-dev-153109",
       "StackId": "arn:aws:cloudformation:ap-south-1:721610409264:stack/amplify-emer-dev-153109/71879580-e02b-11ed-a84a-0650f26a51e2",
       "AmplifyAppId": "d2zxvrek3nlj0w"
+    },
+    "categories": {
+      "auth": {
+        "emer": {}
+      }
     }
   }
 }
