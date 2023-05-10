@@ -10,7 +10,6 @@ import haversine from "haversine";
 import { CONNECTION_STATE_CHANGE, ConnectionState } from "@aws-amplify/pubsub";
 import { Hub } from "aws-amplify";
 
-
 Amplify.configure({
   ...awsconfig,
   Analytics: {
@@ -51,155 +50,149 @@ const requestLocationPermission = async () => {
     return false;
   }
 };
- PubSub.subscribe("esp8266/pub",{qos:0}).subscribe({
-   next: (data) => console.log("Message received"),
-   error: (error) => console.error(error),
-   complete: () => console.log("Done"),
- });
+PubSub.subscribe("esp8266/pub", { qos: 0 }).subscribe({
+  next: (data) => console.log("Message received"),
+  error: (error) => console.error(error),
+  complete: () => console.log("Done"),
+});
 
- function App() {
+function App() {
   const did = requestLocationPermission();
- const [distance, setDistance] = useState(null);
- const [distance1, setDistance1] = useState(null);
- const [distance2, setDistance2] = useState(null);
- const [finish, setFinish] = useState(null);
+  const [distance, setDistance] = useState(null);
+  const [distance1, setDistance1] = useState(null);
+  const [distance2, setDistance2] = useState(null);
+  const [finish, setFinish] = useState(null);
 
-// Hub.listen('pubsub', (data) => {
-//   const { payload } = data;
-//   if (payload.event === CONNECTION_STATE_CHANGE) {r
-//     const connectionState = payload.data.connectionState;
-//     console.log(connectionState);
-//   }
-// });
+  Hub.listen("pubsub", (data) => {
+    const { payload } = data;
+    if (payload.event === CONNECTION_STATE_CHANGE) {
+      r;
+      const connectionState = payload.data.connectionState;
+      console.log(connectionState);
+    }
+  });
 
- 
   function out() {
     Auth.signOut();
   }
   function t1() {
-    PubSub.publish("esp8266/sub", {message:"1"})
+    PubSub.publish("esp8266/sub", { message: "1" })
       .then(() => console.log("published"))
       .catch((error) => console.error(error));
   }
   function s1() {
-    PubSub.publish("esp8266/sub",  {message:"0"})
+    PubSub.publish("esp8266/sub", { message: "0" })
       .then(() => console.log("published"))
       .catch((error) => console.error(error));
   }
   function t2() {
-    PubSub.publish("esp8266_2/sub", {message:"1"})
+    PubSub.publish("esp8266_2/sub", { message: "1" })
       .then(() => console.log("published"))
       .catch((error) => console.error(error));
   }
   function s2() {
-    PubSub.publish("esp8266_2/sub", {message:"0"})
+    PubSub.publish("esp8266_2/sub", { message: "0" })
       .then(() => console.log("published"))
       .catch((error) => console.error(error));
   }
   function t3() {
-    PubSub.publish("esp8266_3/sub", {message:"1"})
+    PubSub.publish("esp8266_3/sub", { message: "1" })
       .then(() => console.log("published"))
       .catch((error) => console.error(error));
   }
   function s3() {
-    PubSub.publish("esp8266_3/sub", {message:"0"})
+    PubSub.publish("esp8266_3/sub", { message: "0" })
       .then(() => console.log("published"))
       .catch((error) => console.error(error));
   }
-  
 
-useEffect(() => {
-  // Set the initial latitude, longitude, and altitude values
-  let lat1 = null;
-  let lon1 = null;
-  let alt1 = null;
-  
-  const lat=17.669970;
-  const lon=75.923397;
-  const alt=0;
-  // Set the second latitude and longitude values
-  const lat2 = 17.6692;
-  const lon2 = 75.9222;
-  const alt2 = 0;
-  var check2=1;
-  
-  const lat3 = 17.669741;
-  const lon3 = 75.923432;
-  const alt3 = 0;
-  var check3=1;
+  useEffect(() => {
+    // Set the initial latitude, longitude, and altitude values
+    let lat1 = null;
+    let lon1 = null;
+    let alt1 = null;
 
-  
-  // Get the current location every second and calculate the distance between two points
-  const intervalId = setInterval(() => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        // Update the latitude, longitude, and altitude values
-        lat1 = position.coords.latitude;
-        lon1 = position.coords.longitude;
-        alt1 = position.coords.altitude;
-        // console.log(lat1, lon1, alt1);
-        
+    const lat = 17.66997;
+    const lon = 75.923397;
+    const alt = 0;
+    // Set the second latitude and longitude values
+    const lat2 = 17.6692;
+    const lon2 = 75.9222;
+    const alt2 = 0;
+    var check2 = 1;
+
+    const lat3 = 17.669741;
+    const lon3 = 75.923432;
+    const alt3 = 0;
+    var check3 = 1;
+
+    // Get the current location every second and calculate the distance between two points
+    const intervalId = setInterval(() => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          // Update the latitude, longitude, and altitude values
+          lat1 = position.coords.latitude;
+          lon1 = position.coords.longitude;
+          alt1 = position.coords.altitude;
+          // console.log(lat1, lon1, alt1);
+
           const distance = haversine(
             { latitude: lat1, longitude: lon1, altitude: alt1 },
-            { latitude: lat, longitude: lon, altitude: alt},
+            { latitude: lat, longitude: lon, altitude: alt },
             { unit: "meter" }
           );
 
-            setDistance(distance);
-        // Calculate the distance between the two points using geolib
-        if (distance<10){
-          setFinish('Reached Destination');
-        }
-        if (check2){
-          const distance1 = haversine(
-            { latitude: lat1, longitude: lon1, altitude: alt1 },
-            { latitude: lat2, longitude: lon2, altitude: alt2 },
-            { unit: "meter" }
-          );
-          setDistance1(distance1);
-          console.log("distance1", distance1);
-          if (distance1 < 100) {
-            if (distance1 < 20) {
+          setDistance(distance);
+          // Calculate the distance between the two points using geolib
+          if (distance < 10) {
+            setFinish("Reached Destination");
+          }
+          if (check2) {
+            const distance1 = haversine(
+              { latitude: lat1, longitude: lon1, altitude: alt1 },
+              { latitude: lat2, longitude: lon2, altitude: alt2 },
+              { unit: "meter" }
+            );
+            setDistance1(distance1);
+            console.log("distance1", distance1);
+            if (distance1 < 100) {
+              if (distance1 < 20) {
+                PubSub.publish("esp8266/sub", {message:"0"});
+                check2 = false;
+              } else {
+                PubSub.publish("esp8266/sub", {message:"1"});
+              }
+            } else {
               PubSub.publish("esp8266/sub", {message:"0"});
-              check2 = false;
-            } else {
-              PubSub.publish("esp8266/sub", {message:"1"});
             }
-          } else {
-            PubSub.publish("esp8266/sub", {message:"0"});
           }
-        }
 
-        if (check3){
-          const distance2 = haversine(
-            { latitude: lat1, longitude: lon1, altitude: alt1 },
-            { latitude: lat3, longitude: lon3, altitude: alt3 },
-            { unit: "meter" }
-          );
-             setDistance2(distance2);
+          if (check3) {
+            const distance2 = haversine(
+              { latitude: lat1, longitude: lon1, altitude: alt1 },
+              { latitude: lat3, longitude: lon3, altitude: alt3 },
+              { unit: "meter" }
+            );
+            setDistance2(distance2);
             console.log("distance2", distance2);
-          if (distance2 < 100) {
-
-            if (distance2 < 20) {
-              PubSub.publish("esp8266_3/sub", {message:"0"});
-              check3 = false;
+            if (distance2 < 100) {
+              if (distance2 < 20) {
+                PubSub.publish("esp8266_3/sub", {message:"0"});
+                check3 = false;
+              } else {
+                PubSub.publish("esp8266_3/sub", {message:"1"});
+              }
             } else {
-              PubSub.publish("esp8266_3/sub", {message:"1"});
+              PubSub.publish("esp8266_3/sub", {message:"0"});
             }
-          } else {
-            PubSub.publish("esp8266_3/sub", {message:"0"});
           }
-        }
-        console.log('distance',distance);
-        
-      },
-      (error) => console.log(error),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-  }, 1000);
-
-}, []);
-  
+          console.log("distance", distance);
+        },
+        (error) => console.log(error),
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      );
+    }, 1000);
+  }, []);
 
   return (
     <View style={styles.container}>
